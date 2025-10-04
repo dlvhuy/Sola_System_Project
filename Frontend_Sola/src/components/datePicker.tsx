@@ -15,23 +15,21 @@ import {
 type DatePickerProps = {
   value?: Date
   onChange?: (date: Date | undefined) => void
+  className?: string
 }
 
 
-export default function DatePicker({ value, onChange }: DatePickerProps) {
+export default function DatePicker({className, value, onChange }: DatePickerProps) {
   const [open, setOpen] = React.useState(false)
 
   return (
     <div className="flex flex-col gap-3">
-      <Label htmlFor="date" className="px-1">
-        Date of birth
-      </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             id="date"
-            className="w-48 justify-between font-normal"
+            className={`${className} justify-between font-normal`}
           >
             {value ? value.toLocaleDateString() : "Select date"}
             <ChevronDownIcon />

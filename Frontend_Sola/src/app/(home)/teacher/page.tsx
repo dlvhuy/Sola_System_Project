@@ -1,4 +1,5 @@
 'use client'
+import FormAddInfoStudent from "@/components/form/addInfoStudent";
 import Modal from "@/components/modal";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -16,8 +17,7 @@ export default function TeacherPage() {
             {
                 isOpenModal && <div className="bg-gray-100 min-h-screen p-4">
                     <Modal sendOpenModal={handleSetOpenModal}>
-                        <Input placeholder="Type your message here..." className="w-full" />
-
+                        <FormAddInfoStudent></FormAddInfoStudent>
                     </Modal>
                 </div>
             }

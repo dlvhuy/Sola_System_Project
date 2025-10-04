@@ -1,7 +1,19 @@
+'use client'
+import FormAddInfoStudent from "@/components/form/addInfoStudent";
+import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useState } from "react";
 
 export default function AdminPage() {
+
+    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+    
+         const handleSetOpenModal = (data: boolean) => {
+                setIsOpenModal(data);
+        };
+    
+        
     return (
         <Card className="my-4 p-4 border-0 shadow-none ">
             <div className="grid lg:grid-cols-3 gap-4  md:*:grid-cols-1 sm:grid-cols-1">
@@ -11,7 +23,7 @@ export default function AdminPage() {
                             <h1 className="text-2xl font-bold mb-4">Trang Quản Trị Viên</h1>
                         </div>
                         <div>
-                            <Button className="cursor-pointer">
+                            <Button className="cursor-pointer" onClick={() => setIsOpenModal(true)}>
                                 Thêm thông tin học sinh
                             </Button>
                         </div>
@@ -31,7 +43,13 @@ export default function AdminPage() {
                 </div>
             </div>
 
-
+             {
+                    isOpenModal && <div className="bg-gray-100 min-h-screen p-4">
+                        <Modal sendOpenModal={handleSetOpenModal}>
+                            <FormAddInfoStudent></FormAddInfoStudent>
+                        </Modal>
+                    </div>
+                }
         </Card>
     )
 }

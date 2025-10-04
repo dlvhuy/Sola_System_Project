@@ -6,6 +6,7 @@ import { useState } from "react"
 import DatePicker from "../datePicker"
 import { PickSelect } from "../pickSelect"
 import { add } from "date-fns"
+import AddressPicker from "../addressPicker"
 
 type Student = {
     nameStudent: string
@@ -106,10 +107,8 @@ export default function FormAddInfoStudent() {
     return (
 
         <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-6">
-                <div>
-                    <h2>Học sinh</h2>
-                </div>
+            <div className="flex flex-col gap-2 my-4">
+                
                 <div className="grid gap-2">
                     <Label htmlFor="phoneNumber">Tên học sinh</Label>
                     <Input
@@ -122,28 +121,31 @@ export default function FormAddInfoStudent() {
                     />
                     {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="phoneNumber">Ngày sinh</Label>
-                    <DatePicker
-                        onChange={(date) => handleChange("student", "birthDay", date ? date.toISOString() : "")}
-                    />
-                    {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="phoneNumber">Giới tính</Label>
-                    < PickSelect
-                        value={addInfoStudentData.student.gender}
-                        title="Chọn giới tính"
-                        values={["Nam", "Nữ"]}
-                        onChange={(e) => handleChange("student", "gender", e.toString())}
-                    />
-                    {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                <div className="flex gap-4 justify-between">
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="phoneNumber">Ngày sinh</Label>
+                        <DatePicker
+                            className="w-60"
+                            value={addInfoStudentData.student.birthDay ? new Date(addInfoStudentData.student.birthDay) : undefined}
+                            onChange={(date) => handleChange("student", "birthDay", date ? date.toISOString() : "")}
+                        />
+                        {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="phoneNumber">Giới tính</Label>
+                        < PickSelect
+                            value={addInfoStudentData.student.gender}
+                            title="Chọn giới tính"
+                            values={[{ name: "Nam", value: "Nam" }, { name: "Nữ", value: "Nữ" }]}
+                            onChange={(e) => handleChange("student", "gender", e.toString())}
+                        />
+                        {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                    </div>
                 </div>
             </div>
-            <div className="flex flex-col gap-6">
-                <div>
-                    <h2>Phụ huynh</h2>
-                </div>
+            <div className="flex flex-col gap-2">
+               
                 <div className="grid gap-2">
                     <Label htmlFor="nameParent">Tên phụ huynh</Label>
                     <Input
@@ -155,7 +157,7 @@ export default function FormAddInfoStudent() {
                         required
                     />
                     {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
-                </div>  
+                </div>
 
                 <div className="grid gap-2">
                     <Label htmlFor="phoneNumber">Số điện thoại</Label>
@@ -169,7 +171,21 @@ export default function FormAddInfoStudent() {
                     />
                     {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
                 </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="address">Địa chỉ</Label>
+                    <AddressPicker></AddressPicker>
+                    <Input
+                        className="h-10"
+                        id="address"
+                        type="text"
+                        onChange={e => handleChange("parent", "address", e.target.value)}
+                        placeholder="Nhập địa chỉ"
+                        required
+                    />
+                    {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                </div>
             </div>
+
             <div className="flex-col gap-2 mt-4">
                 <Button type="submit" className="w-full cursor-pointer">
                     Thêm thông tin học sinh

@@ -10,23 +10,28 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
+type Value = {
+    name: string
+    value: string
+}
 type SelectScrollableProps = {
-    values?: string[]
+    values?: Value[]
     title: string
-    value?: string
+    value?: string 
+
     onChange?: (value: string) => void
 }
 
 export function PickSelect({ values, title, value, onChange }: SelectScrollableProps) {
     return (
-        <Select>
+        <Select value={value} onValueChange={onChange}>
             <SelectTrigger className="w-[280px]">
                 <SelectValue placeholder={title} />
             </SelectTrigger>
             <SelectContent>
                 {values && values?.map((value) => (
-                    <SelectItem key={value} value={value}>
-                        {value}
+                    <SelectItem key={value.value} value={value.value}>
+                        {value.name}
                     </SelectItem>
                 ))}
             </SelectContent>

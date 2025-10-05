@@ -17,7 +17,11 @@ type Student = {
 type Parent = {
     nameParent: string
     phoneNumber: string
-    address: string
+    address: {
+        detailAddress: string
+        province: string
+        ward: string
+    }
 }
 
 type FormData = {
@@ -39,7 +43,11 @@ const initialFormData: FormData = {
     parent: {
         nameParent: "",
         phoneNumber: "",
-        address: ""
+        address:{
+            detailAddress: "",
+            province: "",
+            ward: ""
+        }
     }
 }
 
@@ -52,46 +60,78 @@ type InfoStudentError = {
     parent?: {
         nameParent?: string
         phoneNumber?: string
-        address?: string
+        address?: {
+            detailAddress?: string
+            province?: string
+            ward?: string
+        }
     }
 }
 export default function FormAddInfoStudent() {
 
     const [addInfoStudentData, setAddInfoStudentData] = useState<FormData>(initialFormData)
-    const [addInfoStudentDataError, setAddInfoStudentDataError] = useState<{
-        student?: {
-            nameStudent?: "",
-            birthDay?: "",
-            gender?: ""
-        },
-        parent?: {
-            nameParent?: "",
-            phoneNumber?: "",
-            address?: ""
-        }
-    }>({})
+    const [addInfoStudentDataError, setAddInfoStudentDataError] = useState<InfoStudentError>({})
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         const { student, parent } = addInfoStudentData
         let infoStudentError: InfoStudentError = {}
 
-        // const phoneNumberRegex = /^[0-9]{10}$/
-        // if (!phoneNumberRegex.test(phoneNumber)) {
-        //     loginError.phoneNumber = "Số điện thoại phải có 10 chữ số"
-        // }
+        const nameStudentRegex = /^[A-Za-zÀ-Ỹà-ỹĐđ\s]+$/
+        if (!nameStudentRegex.test(student.nameStudent)) {
+            infoStudentError.student = {
+                ...infoStudentError.student,
+                nameStudent: "Tên học sinh không hợp lệ"
+            }
+        }
 
-        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/
-        // if (!passwordRegex.test(password)) {
-        //     loginError.password =
-        //         "Mật khẩu phải >=6 ký tự, có chữ hoa, chữ thường và số"
-        // }
+        const genderOptions = ["Nam", "Nữ"]
 
-        // setLoginError(loginError)
+        if (!genderOptions.includes(student.gender)) {
+            infoStudentError.student = {
+                ...infoStudentError.student,
+                gender: "Giới tính phải là Nam hoặc Nữ"
+            }
+        }
 
-        // if (Object.keys(loginError).length === 0) {
-        //     console.log("Form submitted:", { phoneNumber, password })
-        // }
+        if (new Date(student.birthDay) > new Date()) {
+            infoStudentError.student = {
+                ...infoStudentError.student,
+                birthDay: "Ngày sinh không hợp lệ"
+            }
+        }
+
+        const nameparentRegex = /^[A-Za-zÀ-Ỹà-ỹĐđ\s]+$/
+        if (!nameparentRegex.test(parent.nameParent)) {
+            infoStudentError.parent = {
+                ...infoStudentError.parent,
+                nameParent: "Tên phụ huynh không hợp lệ"
+            }
+        }
+
+        const phoneNumberRegex = /^[0-9]{10}$/
+        if (!phoneNumberRegex.test(parent.phoneNumber)) {
+            infoStudentError.parent = {
+                ...infoStudentError.parent,
+                phoneNumber: "Tên phụ huynh không hợp lệ"
+            }
+        }
+
+        if (parent.address.detailAddress.trim().length === 0) {
+            infoStudentError.parent = {
+                ...infoStudentError.parent?.address,
+                address: {
+                    ...infoStudentError.parent?.address,
+                    detailAddress: "Địa chỉ không được để trống"
+                }
+            }
+        }
+        setAddInfoStudentDataError(infoStudentError)
+
+        if (Object.keys(infoStudentError).length === 0) {
+            console.log("Form submitted:", { student, parent })
+        }
+
     }
 
     const handleChange = (section: "student" | "parent", field: string, value: string) => {
@@ -104,11 +144,25 @@ export default function FormAddInfoStudent() {
         }))
     }
 
-    return (
+    function handleAddressChange(field: keyof NonNullable<InfoStudentError["parent"]>["address"], value: string) {
+        setAddInfoStudentData(prev => ({
+            ...prev,
+            parent: {
+                ...prev.parent,
+                address: {
+                    ...prev.parent?.address,
+                    [field]: value,
+                }
+            }
+        }))
+    }
+
+
+    return (    
 
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2 my-4">
-                
+
                 <div className="grid gap-2">
                     <Label htmlFor="phoneNumber">Tên học sinh</Label>
                     <Input
@@ -145,7 +199,7 @@ export default function FormAddInfoStudent() {
                 </div>
             </div>
             <div className="flex flex-col gap-2">
-               
+
                 <div className="grid gap-2">
                     <Label htmlFor="nameParent">Tên phụ huynh</Label>
                     <Input
@@ -173,7 +227,9 @@ export default function FormAddInfoStudent() {
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="address">Địa chỉ</Label>
-                    <AddressPicker></AddressPicker>
+                    <AddressPicker 
+                        onChange={(value) => handleAddressChange("province", value.Province)}
+                    />
                     <Input
                         className="h-10"
                         id="address"

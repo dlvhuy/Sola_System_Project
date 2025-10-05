@@ -5,7 +5,14 @@ import { PickSelect } from "./pickSelect";
 import { set } from "date-fns";
 
 
-export default function AddressPicker() {
+export default function AddressPicker({ onChange }:
+    {
+        onChange?:(address: {
+            Province: string,
+            Ward: string
+        }) => void
+    }) {
+
     const [provinces, setProvinces] = useState<any>(null);
     const [wards, setWards] = useState<any>(null);
     const [province, setProvince] = useState<string>("");
@@ -18,7 +25,7 @@ export default function AddressPicker() {
             const data = await res.json();
             const result = data.map((item: any) => ({
                 name: item.name,
-                value: String(item.code) // hoặc item.codename nếu bạn muốn
+                value: String(item.code) 
             }));
             setProvinces(result);
         };
@@ -46,6 +53,7 @@ export default function AddressPicker() {
     }, [province]);
 
     useEffect(() => {
+        onChange(address);
         console.log(address.Province, address.Ward)
     }, [address]);
 
@@ -53,7 +61,7 @@ export default function AddressPicker() {
         console.log("gia tri:", province, value);
 
         setProvince(value);
-        setWard(""); // reset ward khi đổi tỉnh
+        setWard("");
 
     }
 
@@ -67,7 +75,6 @@ export default function AddressPicker() {
     return (
         <div className="flex justify-between gap-4">
             <PickSelect
-                
                 value={province}
                 values={provinces}
                 title="Tỉnh/Thành phố"

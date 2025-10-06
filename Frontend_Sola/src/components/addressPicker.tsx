@@ -53,7 +53,6 @@ export default function AddressPicker({ onChange }:
     }, [province]);
 
     useEffect(() => {
-        onChange(address);
         console.log(address.Province, address.Ward)
     }, [address]);
 

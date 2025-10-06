@@ -228,7 +228,6 @@ export default function FormAddInfoStudent() {
                 <div className="grid gap-2">
                     <Label htmlFor="address">Địa chỉ</Label>
                     <AddressPicker 
-                        onChange={(value) => handleAddressChange("province", value.Province)}
                     />
                     <Input
                         className="h-10"

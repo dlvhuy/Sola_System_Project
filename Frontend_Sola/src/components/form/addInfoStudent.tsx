@@ -139,8 +139,6 @@ export default function FormAddInfoStudent() {
         }))
     }
 
-
-
     const handleAddressChange = (address: { Province: string; Ward: string }) => {
         setAddInfoStudentData(prev => ({
             ...prev,

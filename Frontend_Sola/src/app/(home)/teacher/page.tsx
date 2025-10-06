@@ -13,14 +13,14 @@ export default function TeacherPage() {
 
     return (
         <div>
-            <button onClick={() => setIsOpenModal(true)}>Open Modal</button>
+            {/* <button onClick={() => setIsOpenModal(true)}>Open Modal</button>
             {
                 isOpenModal && <div className="bg-gray-100 min-h-screen p-4">
                     <Modal sendOpenModal={handleSetOpenModal}>
                         <FormAddInfoStudent></FormAddInfoStudent>
                     </Modal>
                 </div>
-            }
+            } */}
         </div>
     )
 }

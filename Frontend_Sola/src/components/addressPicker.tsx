@@ -7,7 +7,7 @@ import { set } from "date-fns";
 
 export default function AddressPicker({ onChange }:
     {
-        onChange?:(address: {
+        onChange?: (address: {
             Province: string,
             Ward: string
         }) => void
@@ -25,7 +25,7 @@ export default function AddressPicker({ onChange }:
             const data = await res.json();
             const result = data.map((item: any) => ({
                 name: item.name,
-                value: String(item.code) 
+                value: String(item.code)
             }));
             setProvinces(result);
         };
@@ -53,6 +53,7 @@ export default function AddressPicker({ onChange }:
     }, [province]);
 
     useEffect(() => {
+        onChange?.(address);
         console.log(address.Province, address.Ward)
     }, [address]);
 
@@ -71,6 +72,8 @@ export default function AddressPicker({ onChange }:
 
     }
 
+
+
     return (
         <div className="flex justify-between gap-4">
             <PickSelect
@@ -84,6 +87,7 @@ export default function AddressPicker({ onChange }:
                 values={wards}
                 title="Xã/Phường"
                 onChange={handleChangeWards}
+                disable={!province}
             />
         </div>
     );

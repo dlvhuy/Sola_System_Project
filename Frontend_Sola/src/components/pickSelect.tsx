@@ -18,13 +18,13 @@ type SelectScrollableProps = {
     values?: Value[]
     title: string
     value?: string 
-
     onChange?: (value: string) => void
+    disable?: boolean
 }
 
-export function PickSelect({ values, title, value, onChange }: SelectScrollableProps) {
+export function PickSelect({ values, title, value, onChange, disable }: SelectScrollableProps) {
     return (
-        <Select value={value} onValueChange={onChange}>
+        <Select value={value} onValueChange={onChange} disabled={disable}>
             <SelectTrigger className="w-[280px]">
                 <SelectValue placeholder={title} />
             </SelectTrigger>

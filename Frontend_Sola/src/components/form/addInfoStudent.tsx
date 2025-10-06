@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import DatePicker from "../datePicker"
 import { PickSelect } from "../pickSelect"
-import { add } from "date-fns"
 import AddressPicker from "../addressPicker"
 
 type Student = {
@@ -29,11 +28,6 @@ type FormData = {
     parent: Parent
 }
 
-type ErrorDataOptional = Partial<{
-    student: Partial<Student>
-    parent: Partial<Parent>
-}>
-
 const initialFormData: FormData = {
     student: {
         nameStudent: "",
@@ -43,7 +37,7 @@ const initialFormData: FormData = {
     parent: {
         nameParent: "",
         phoneNumber: "",
-        address:{
+        address: {
             detailAddress: "",
             province: "",
             ward: ""
@@ -81,7 +75,7 @@ export default function FormAddInfoStudent() {
         if (!nameStudentRegex.test(student.nameStudent)) {
             infoStudentError.student = {
                 ...infoStudentError.student,
-                nameStudent: "Tên học sinh không hợp lệ"
+                nameStudent: "Tên học sinh không được có chữ số"
             }
         }
 
@@ -105,7 +99,7 @@ export default function FormAddInfoStudent() {
         if (!nameparentRegex.test(parent.nameParent)) {
             infoStudentError.parent = {
                 ...infoStudentError.parent,
-                nameParent: "Tên phụ huynh không hợp lệ"
+                nameParent: "Tên phụ huynh không được có chữ số"
             }
         }
 
@@ -113,16 +107,17 @@ export default function FormAddInfoStudent() {
         if (!phoneNumberRegex.test(parent.phoneNumber)) {
             infoStudentError.parent = {
                 ...infoStudentError.parent,
-                phoneNumber: "Tên phụ huynh không hợp lệ"
+                phoneNumber: "Số điện thoại phải là số và có 10 ký tự"
             }
         }
 
-        if (parent.address.detailAddress.trim().length === 0) {
+        const detailAddressRegex = /^[A-Za-zÀ-Ỹà-ỹĐđ0-9\s]+$/
+        if(!detailAddressRegex.test(parent.address.detailAddress)){
             infoStudentError.parent = {
                 ...infoStudentError.parent?.address,
                 address: {
                     ...infoStudentError.parent?.address,
-                    detailAddress: "Địa chỉ không được để trống"
+                    detailAddress: "Địa chỉ không hợp lệ"
                 }
             }
         }
@@ -144,21 +139,36 @@ export default function FormAddInfoStudent() {
         }))
     }
 
-    function handleAddressChange(field: keyof NonNullable<InfoStudentError["parent"]>["address"], value: string) {
+
+
+    const handleAddressChange = (address: { Province: string; Ward: string }) => {
         setAddInfoStudentData(prev => ({
             ...prev,
             parent: {
                 ...prev.parent,
                 address: {
-                    ...prev.parent?.address,
-                    [field]: value,
+                    ...prev.parent.address,
+                    province: address.Province,  
+                    ward: address.Ward          
                 }
             }
-        }))
+        }));
+    };
+
+    const handleDetailAddressChange = (value: string) => {
+        setAddInfoStudentData(prev => ({
+            ...prev,
+            parent: {
+                ...prev.parent,
+                address: {
+                    ...prev.parent.address,
+                    detailAddress: value
+                }
+            }
+        }));
     }
 
-
-    return (    
+    return (
 
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2 my-4">
@@ -173,7 +183,7 @@ export default function FormAddInfoStudent() {
                         placeholder="Nhập tên học sinh"
                         required
                     />
-                    {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                    {addInfoStudentDataError.student?.nameStudent && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.student?.nameStudent}</p>}
                 </div>
                 <div className="flex gap-4 justify-between">
 
@@ -184,7 +194,7 @@ export default function FormAddInfoStudent() {
                             value={addInfoStudentData.student.birthDay ? new Date(addInfoStudentData.student.birthDay) : undefined}
                             onChange={(date) => handleChange("student", "birthDay", date ? date.toISOString() : "")}
                         />
-                        {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                        {addInfoStudentDataError.student?.birthDay && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.student?.birthDay}</p>}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="phoneNumber">Giới tính</Label>
@@ -194,7 +204,7 @@ export default function FormAddInfoStudent() {
                             values={[{ name: "Nam", value: "Nam" }, { name: "Nữ", value: "Nữ" }]}
                             onChange={(e) => handleChange("student", "gender", e.toString())}
                         />
-                        {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                         {addInfoStudentDataError.student?.gender && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.student?.gender}</p>}
                     </div>
                 </div>
             </div>
@@ -210,7 +220,7 @@ export default function FormAddInfoStudent() {
                         placeholder="Nhập tên phụ huynh"
                         required
                     />
-                    {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                    {addInfoStudentDataError.parent?.nameParent && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.parent?.nameParent}</p>}
                 </div>
 
                 <div className="grid gap-2">
@@ -223,25 +233,27 @@ export default function FormAddInfoStudent() {
                         placeholder="Nhập số điện thoại"
                         required
                     />
-                    {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                     {addInfoStudentDataError.parent?.phoneNumber && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.parent?.phoneNumber}</p>}
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="address">Địa chỉ</Label>
-                    <AddressPicker 
+                    <AddressPicker
+                        onChange={handleAddressChange}
                     />
                     <Input
                         className="h-10"
-                        id="address"
+                        id="detailAddress"
                         type="text"
-                        onChange={e => handleChange("parent", "address", e.target.value)}
+                        onChange={e => handleDetailAddressChange(e.target.value)}
                         placeholder="Nhập địa chỉ"
                         required
+                        disabled = {!addInfoStudentData.parent.address.ward}
                     />
-                    {/* {loginError.phoneNumber && <p className="px-2 text-sm text-red-500">{loginError.phoneNumber}</p>} */}
+                    {addInfoStudentDataError.parent?.address?.detailAddress && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.parent?.address?.detailAddress}</p>}
                 </div>
             </div>
 
-            <div className="flex-col gap-2 mt-4">
+            <div className="flex-col gap-2 mt-6">
                 <Button type="submit" className="w-full cursor-pointer">
                     Thêm thông tin học sinh
                 </Button>

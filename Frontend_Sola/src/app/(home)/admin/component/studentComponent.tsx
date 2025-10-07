@@ -1,9 +1,11 @@
 import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { dataTeacher, Teacher } from "@/lib/dataTeacher";
 import { createColumnHelper } from "@tanstack/react-table";
+import { MoreVertical } from "lucide-react";
 
 type StudnentComponentProps = {
     openModalStudentInfo: (value: boolean) => void
@@ -63,11 +65,34 @@ const collumn = [
         header: () => <p>Địa chỉ</p>,
         cell: (info) => info.getValue(),
     }),
+
+    collumnHelper.display({
+        id:"more",
+        cell: ({row}) => {
+            return(
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant={"ghost"} className="cursor-pointer">
+                            <MoreVertical/>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-white text-black shadow-lg " onCloseAutoFocus={(e) => e.preventDefault()}>
+                        <DropdownMenuLabel >Tùy chọn</DropdownMenuLabel>
+                        <DropdownMenuSeparator className="h-auto bg-white">
+                            <DropdownMenuItem className="px-4 cursor-pointer">Chi tiết</DropdownMenuItem>
+                            <DropdownMenuItem className="px-4 cursor-pointer">Chỉnh sửa</DropdownMenuItem>
+                            <DropdownMenuItem className="px-4 cursor-pointer">Xóa</DropdownMenuItem>
+                        </DropdownMenuSeparator>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        }
+    })
 ]
 
 export default function StudentComponent({ openModalStudentInfo }: StudnentComponentProps) {
     return (<div className="grid lg:grid-cols-4 gap-4  md:*:grid-cols-1 sm:grid-cols-1">
-        <div className=" grid lg:col-span-3 p-4 rounded-lg ">
+        <div className=" grid lg:col-span-4 p-4 rounded-lg ">
             <div className="flex justify-between mb-3">
                 <div className="max-w-[80%]" >
                     <h1 className="text-2xl font-bold mb-4">Danh sách học viên</h1>
@@ -88,12 +113,6 @@ export default function StudentComponent({ openModalStudentInfo }: StudnentCompo
             <div>
                 <DataTable<Teacher, any> columns={collumn} data={dataTeacher}></DataTable>
             </div>
-        </div>
-        <div className="border-2 p-4 rounded-lg max-h-[300px]">
-            <h1 className="text-2xl font-bold mb-4">Thống kê</h1>
-            <p>Số lượng giáo viên: ???</p>
-            <p>Số lượng giáo viên đạt chuẩn: ???</p>
-            <p>Số lượng giáo viên đạt chuẩn 2: ???</p>
         </div>
 
     </div>)

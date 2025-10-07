@@ -7,9 +7,6 @@ import StudentComponent from "./studentComponent";
 import TeacherComponent from "./teacherComponent";
 import FormAddInfoTeacher from "@/components/form/addInfoTeacher";
 
-
-
-
 export default function LayoutComponent() {
     const [active, setActive] = useState<"student" | "teacher">("student")
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
@@ -44,24 +41,22 @@ export default function LayoutComponent() {
             {
                 active === "student" ?
                     <div>
-                        <StudentComponent openModalStudentInfo={handleSetOpenModal} ></StudentComponent>
+                        <StudentComponent openModalStudentInfo={handleSetOpenModal}></StudentComponent>
                         {
                             isOpenModal &&
                             <Modal sendOpenModal={handleSetOpenModal} title="Thêm thông tin học sinh">
                                 <FormAddInfoStudent></FormAddInfoStudent>
                             </Modal>
-
                         }
                     </div>
                     :
                     <div>
-                        <TeacherComponent openModalTeacherInfo={handleSetOpenModal} ></TeacherComponent>
+                        <TeacherComponent openModalTeacherInfo={handleSetOpenModal}></TeacherComponent>
                         {
                             isOpenModal &&
                             <Modal sendOpenModal={handleSetOpenModal} title="Thêm thông tin giáo viên">
                                 <FormAddInfoTeacher></FormAddInfoTeacher>
                             </Modal>
-
                         }
                     </div>
             }

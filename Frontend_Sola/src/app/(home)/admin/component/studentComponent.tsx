@@ -91,7 +91,8 @@ const collumn = [
 ]
 
 export default function StudentComponent({ openModalStudentInfo }: StudnentComponentProps) {
-    return (<div className="grid lg:grid-cols-4 gap-4  md:*:grid-cols-1 sm:grid-cols-1">
+    return (
+    <div className="grid lg:grid-cols-4 gap-4  md:*:grid-cols-1 sm:grid-cols-1">
         <div className=" grid lg:col-span-4 p-4 rounded-lg ">
             <div className="flex justify-between mb-3">
                 <div className="max-w-[80%]" >

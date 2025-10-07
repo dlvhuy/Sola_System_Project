@@ -126,7 +126,6 @@ export default function FormAddInfoTeacher() {
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2 my-4">
-
                 <div className="grid gap-2">
                     <Label htmlFor="teacherName">Tên giáo viên</Label>
                     <Input

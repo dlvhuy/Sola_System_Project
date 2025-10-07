@@ -6,6 +6,7 @@ import { useState } from "react";
 import StudentComponent from "./studentComponent";
 import TeacherComponent from "./teacherComponent";
 import FormAddInfoTeacher from "@/components/form/addInfoTeacher";
+import FormAddStudentProgressReport from "@/components/form/addStudentProgressReport";
 
 export default function LayoutComponent() {
     const [active, setActive] = useState<"student" | "teacher">("student")

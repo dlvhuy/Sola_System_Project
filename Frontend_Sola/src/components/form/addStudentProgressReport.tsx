@@ -285,7 +285,6 @@ export default function FormAddStudentProgressReport() {
                         <div className="min-h-[20px]">
                             {addInfoStudentProgressReportDataError.practiceSkill?.comment && <p className="px-2 text-sm text-red-500">{addInfoStudentProgressReportDataError.practiceSkill?.comment}</p>}
                         </div>
-
                     </div>
                 </div>
             </div>

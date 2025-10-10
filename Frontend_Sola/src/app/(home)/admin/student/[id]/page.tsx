@@ -29,12 +29,12 @@ import ReportChartComponent from "./components/reportChartComponent";
 import AnalyzeStudent from "./components/analyzeStudent";
 
 export type Student = {
-    id: number
-    full_name: string
-    date_of_birth: string
+    ID: number
+    name: string
+    birthday: string
     gender: string
-    parent_name: string
-    parent_phone: string
+    nameParent: string
+    phoneNumber: string
     parent_email: string
     address: string
 }
@@ -58,19 +58,18 @@ export default function StudentDetailPage() {
     const [student, setStudent] = useState<Student | null>(null)
     const [sessions, setSessions] = useState<SessionReview[]>([])
     const [selectedSession, setSelectedSession] = useState<SessionReview | null>(null)
-    const [openModalFormAddStudentProgressReport, setOpenModalFormAddStudentProgressReport] = useState(true)
+    const [openModalFormAddStudentProgressReport, setOpenModalFormAddStudentProgressReport] = useState(false)
     const [chartType, setChartType] = useState<"line" | "radar">("line")
-
 
 
     useEffect(() => {
         setStudent({
-            id: Number.parseInt(studentId),
-            full_name: "Nguyễn Văn An",
-            date_of_birth: "2011-03-15",
+            ID: Number.parseInt(studentId),
+            name: "Nguyễn Văn An",
+            birthday: "2011-03-15",
             gender: "Nam",
-            parent_name: "Nguyễn Văn Bình",
-            parent_phone: "0912345678",
+            nameParent: "Nguyễn Văn Bình",
+            phoneNumber: "0912345678",
             parent_email: "phuhuynh1@email.com",
             address: "123 Đường ABC, Quận 1, TP.HCM",
         })
@@ -178,7 +177,7 @@ export default function StudentDetailPage() {
                 {
                     openModalFormAddStudentProgressReport &&
                     <Modal title="Tạo báo cáo buổi học" sendOpenModal={handleSetOpenModal}>
-                        <FormAddStudentProgressReport></FormAddStudentProgressReport>
+                        <FormAddStudentProgressReport studentId={studentId}></FormAddStudentProgressReport>
                     </Modal>
                 }
             </div>

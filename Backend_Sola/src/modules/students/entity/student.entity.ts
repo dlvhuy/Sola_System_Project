@@ -11,6 +11,7 @@ export class Student extends Model<Student> {
         type: DataType.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+        field:'id'
     })
     ID: number;
 

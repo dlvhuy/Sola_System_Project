@@ -2,23 +2,46 @@ import FormAddInfoStudent from "@/components/form/addInfoStudent";
 import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StudentComponent from "./studentComponent";
 import TeacherComponent from "./teacherComponent";
 import FormAddInfoTeacher from "@/components/form/addInfoTeacher";
 import FormAddStudentProgressReport from "@/components/form/addStudentProgressReport";
+import { Student } from "../student/[id]/page";
+import { Teacher } from "@/lib/dataStudent";
+import { studentApi } from "@/lib/api/student.api";
 
 export default function LayoutComponent() {
     const [active, setActive] = useState<"student" | "teacher">("student")
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+    const [dataStudent, setDataStudent] = useState<Student[]>([])
+    const [dataTeacher, setDataTeacher] = useState<Teacher[]>([])
 
     const handleSetOpenModal = (data: boolean) => {
         setIsOpenModal(data);
     };
 
-    const handChangeStudentOrTeacher = (value: "student" | "teacher") =>{
+    const handChangeStudentOrTeacher = (value: "student" | "teacher") => {
         setActive(value)
         setIsOpenModal(false)
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await studentApi.getAll();
+                setDataStudent(data.data.data);
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu sinh viên:", error);
+            }
+        };
+
+        fetchData(); 
+    }, []); 
+
+    const handleAddStudentIntoDataStudent = (value:any) =>{
+
+        setDataStudent((prev) => ({...prev,value}));
     }
 
     return (
@@ -42,11 +65,13 @@ export default function LayoutComponent() {
             {
                 active === "student" ?
                     <div>
-                        <StudentComponent openModalStudentInfo={handleSetOpenModal}></StudentComponent>
+                        <StudentComponent dataStudents={dataStudent} openModalStudentInfo={handleSetOpenModal}></StudentComponent>
                         {
                             isOpenModal &&
                             <Modal sendOpenModal={handleSetOpenModal} title="Thêm thông tin học sinh">
-                                <FormAddInfoStudent></FormAddInfoStudent>
+                                <FormAddInfoStudent 
+                                    handleAddStudentIntoDataStudent={handleAddStudentIntoDataStudent} 
+                                />
                             </Modal>
                         }
                     </div>

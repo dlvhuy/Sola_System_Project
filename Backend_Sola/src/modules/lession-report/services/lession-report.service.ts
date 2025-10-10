@@ -14,8 +14,12 @@ export class LessionReportsService {
         try {
 
             const newLesionReport = await this.lessionReportModel.create(data);
+            const data1 = {
+                ID: newLesionReport.ID,
+                data: newLesionReport,
+            }
 
-            return ResponseHelper.success('Thêm báo cáo buổi học thành công', newLesionReport);
+            return ResponseHelper.success('Thêm báo cáo buổi học thành công', data1);
         } catch (error) {
             return ResponseHelper.error('Xảy ra lỗi khi thêm báo cáo buổi học', HttpStatus.BAD_REQUEST);
         }
@@ -25,10 +29,10 @@ export class LessionReportsService {
         try {
 
             const data = await this.lessionReportModel.findOne({
-                where: { ID: LessionReportId },
+                where: { id: LessionReportId },
             });
 
-            if (!data) return ResponseHelper.error("Không tìm thấy báo cáo",HttpStatus.NOT_FOUND)
+            if (!data) return ResponseHelper.error("Không tìm thấy báo cáo", HttpStatus.NOT_FOUND)
 
             return ResponseHelper.success('Lấy dữ liệu báo cáo buổi học thành công', data);
         }

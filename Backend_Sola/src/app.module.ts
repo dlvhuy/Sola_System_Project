@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { LessionReport } from './modules/lession-report/entity/lession-report.entity';
 import { Student } from './modules/students/entity/student.entity';
+import { StudentsModule } from './modules/students/students.module';
+import { LessionReportModule } from './modules/lession-report/lession-report.module';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { Student } from './modules/students/entity/student.entity';
       synchronize: true,               // Tự động tạo bảng (chỉ dùng khi dev)
       logging: true,                   // Hiện log SQL trong terminal
     }),
+    StudentsModule,LessionReportModule
   ],
 })
 export class AppModule {}

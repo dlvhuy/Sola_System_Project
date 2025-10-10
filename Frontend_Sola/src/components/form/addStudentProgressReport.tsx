@@ -5,6 +5,8 @@ import { Textarea } from "../ui/textarea"
 import { Slider } from "../ui/slider"
 import { Button } from "../ui/button"
 import { useState } from "react"
+import { isThisMonth } from "date-fns"
+import { lessionReportApi } from "@/lib/api/lession-report.api"
 
 
 
@@ -57,10 +59,10 @@ type InfoStudentProgressReportError = {
 }
 
 
-export default function FormAddStudentProgressReport() {
+export default function FormAddStudentProgressReport({studentId}:{studentId:string}) {
     const [addInfoStudentProgressReportData, setAddInfoStudentProgressReportData] = useState<InfoStudentProgressReport>(initialFormData)
     const [addInfoStudentProgressReportDataError, setAddInfoStudentProgressReportDataError] = useState<InfoStudentProgressReportError>({})
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         const { lesson, lessonDate, thinkingSkill, attitude, theorySkill, practiceSkill } = addInfoStudentProgressReportData
         let addInfoStudentProgressReportDataError: InfoStudentProgressReportError = {}
@@ -106,8 +108,30 @@ export default function FormAddStudentProgressReport() {
         setAddInfoStudentProgressReportDataError(addInfoStudentProgressReportDataError)
 
         if (Object.keys(addInfoStudentProgressReportDataError).length === 0) {
-            console.log("Form submitted:", { addInfoStudentProgressReportData })
+            const data = {
+                studentID: studentId,
+                name_lession: lesson,
+                date_lession: lessonDate,
+                class_thinking_skill: thinkingSkill.Class,
+                comment_thinking_skill: thinkingSkill.comment,
+                class_attitude: attitude.Class,
+                comment_attitude: attitude.comment,
+                class_theory_skill: theorySkill.Class,
+                comment_theory_skill: theorySkill.comment,
+                class_practice_skill: practiceSkill.Class,
+                comment_practice_skill: practiceSkill.comment
+            }
+            const result = await lessionReportApi.create(data)
+            if (result.error) {
+                alert(result.message)
+                return
+            }
+
+            console.log("Form submitted:", result)
+
         }
+        console.log("Form submitted:", { addInfoStudentProgressReportData })
+
 
     }
 

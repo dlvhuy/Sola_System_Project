@@ -21,7 +21,6 @@ export class StudentsService {
 
             if (limit <= 0 || page <= 0) return ResponseHelper.error("số lượng và trang phải là số dương.", HttpStatus.BAD_REQUEST);
 
-
             if (limit > MAX_LIMIT) return ResponseHelper.error("số lượng phải bé hơn 100.", HttpStatus.BAD_REQUEST);
 
             const offset = (page - 1) * limit;
@@ -34,7 +33,7 @@ export class StudentsService {
                 where: whereClause,
                 limit,
                 offset,
-                order: [['id', 'ASC']],
+                order: [['ID', 'ASC']],
             });
 
             const result = {
@@ -52,12 +51,16 @@ export class StudentsService {
 
     async create(data: Student): Promise<ResponseHelper> {
         try {
-
             const newStudent = await this.studentModel.create(data);
+            
+                const data1 ={
+                    ID:newStudent.ID,
+                    data:newStudent,
+                }
 
-            return ResponseHelper.success('Thêm học sinh thành công', newStudent);
+            return ResponseHelper.success('Thêm học sinh thành công',data1);
         } catch (error) {
-            return ResponseHelper.error('Xảy ra lỗi khi lấy danh sách học sinh', HttpStatus.BAD_REQUEST);
+            return ResponseHelper.error('Xảy ra lỗi khi thêm học sinh', HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -65,7 +68,8 @@ export class StudentsService {
         try {
 
             const data = await this.studentModel.findOne({
-                where: { ID: studentId },
+                where: { id: studentId },
+                attributes:['name', 'birthday','gender','nameParent','phoneNumber','address'],
                 include: [
                     {
                         model: LessionReport,

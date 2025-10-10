@@ -6,12 +6,15 @@ import { Input } from "@/components/ui/input";
 import { dataTeacher, Teacher } from "@/lib/dataTeacher";
 import { createColumnHelper } from "@tanstack/react-table";
 import { MoreVertical } from "lucide-react";
+import { Student } from "../student/[id]/page";
+import Link from "next/link";
 
 type StudnentComponentProps = {
-    openModalStudentInfo: (value: boolean) => void
+    openModalStudentInfo: (value: boolean) => void,
+    dataStudents:Student[]
 }
 
-const collumnHelper = createColumnHelper<Teacher>()
+const collumnHelper = createColumnHelper<Student>()
 
 const collumn = [
     collumnHelper.display({
@@ -41,7 +44,7 @@ const collumn = [
         cell: (info) => info.getValue(),
     }),
 
-    collumnHelper.accessor("birthDay", {
+    collumnHelper.accessor("birthday", {
         header: () => <p>Ngày sinh</p>,
         cell: (info) => info.getValue(),
     }),
@@ -51,13 +54,13 @@ const collumn = [
         cell: (info) => info.getValue(),
     }),
 
-    collumnHelper.accessor("phoneNumber", {
-        header: () => <p>Số điện thoại</p>,
+    collumnHelper.accessor("nameParent", {
+        header: () => <p>Tên phụ huynh</p>,
         cell: (info) => info.getValue(),
     }),
 
-    collumnHelper.accessor("email", {
-        header: () => <p>Email</p>,
+    collumnHelper.accessor("phoneNumber", {
+        header: () => <p>Số điện thoại</p>,
         cell: (info) => info.getValue(),
     }),
 
@@ -69,6 +72,7 @@ const collumn = [
     collumnHelper.display({
         id:"more",
         cell: ({row}) => {
+            const studentId = row.original.ID
             return(
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -79,7 +83,7 @@ const collumn = [
                     <DropdownMenuContent className="bg-white text-black shadow-lg " onCloseAutoFocus={(e) => e.preventDefault()}>
                         <DropdownMenuLabel >Tùy chọn</DropdownMenuLabel>
                         <DropdownMenuSeparator className="h-auto bg-white">
-                            <DropdownMenuItem className="px-4 cursor-pointer">Chi tiết</DropdownMenuItem>
+                            <DropdownMenuItem className="px-4 cursor-pointer"><Link href={`/admin/student/${studentId}`}>Chi tiết</Link></DropdownMenuItem>
                             <DropdownMenuItem className="px-4 cursor-pointer">Chỉnh sửa</DropdownMenuItem>
                             <DropdownMenuItem className="px-4 cursor-pointer">Xóa</DropdownMenuItem>
                         </DropdownMenuSeparator>
@@ -90,7 +94,13 @@ const collumn = [
     })
 ]
 
-export default function StudentComponent({ openModalStudentInfo }: StudnentComponentProps) {
+export default function StudentComponent({
+     openModalStudentInfo,
+     dataStudents 
+    }: StudnentComponentProps) {
+
+    console.log("heloo: ",dataStudents)
+
     return (
     <div className="grid lg:grid-cols-4 gap-4  md:*:grid-cols-1 sm:grid-cols-1">
         <div className=" grid lg:col-span-4 p-4 rounded-lg ">
@@ -112,7 +122,7 @@ export default function StudentComponent({ openModalStudentInfo }: StudnentCompo
                 </div>
             </div>
             <div>
-                <DataTable<Teacher, any> columns={collumn} data={dataTeacher}></DataTable>
+                <DataTable<Student, any> columns={collumn} data={dataStudents}></DataTable>
             </div>
         </div>
 

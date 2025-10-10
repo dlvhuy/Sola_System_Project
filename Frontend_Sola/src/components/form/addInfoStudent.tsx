@@ -6,6 +6,7 @@ import { useState } from "react"
 import DatePicker from "../datePicker"
 import { PickSelect } from "../pickSelect"
 import AddressPicker from "../addressPicker"
+import { studentApi } from "@/lib/api/student.api"
 
 type Student = {
     nameStudent: string
@@ -61,12 +62,16 @@ type InfoStudentError = {
         }
     }
 }
-export default function FormAddInfoStudent() {
+export default function FormAddInfoStudent({
+    handleAddStudentIntoDataStudent
+}: {
+    handleAddStudentIntoDataStudent: (value: any) => void
+}) {
 
     const [addInfoStudentData, setAddInfoStudentData] = useState<FormData>(initialFormData)
     const [addInfoStudentDataError, setAddInfoStudentDataError] = useState<InfoStudentError>({})
 
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         const { student, parent } = addInfoStudentData
         let infoStudentError: InfoStudentError = {}
@@ -112,7 +117,7 @@ export default function FormAddInfoStudent() {
         }
 
         const detailAddressRegex = /^[A-Za-zÀ-Ỹà-ỹĐđ0-9\s]+$/
-        if(!detailAddressRegex.test(parent.address.detailAddress)){
+        if (!detailAddressRegex.test(parent.address.detailAddress)) {
             infoStudentError.parent = {
                 ...infoStudentError.parent?.address,
                 address: {
@@ -124,7 +129,23 @@ export default function FormAddInfoStudent() {
         setAddInfoStudentDataError(infoStudentError)
 
         if (Object.keys(infoStudentError).length === 0) {
-            console.log("Form submitted:", { student, parent })
+            const data = {
+                name: student.nameStudent,
+                gender: student.gender,
+                birthday: student.birthDay,
+                nameParent: parent.nameParent,
+                phoneNumber: parent.phoneNumber,
+                address: parent.address.detailAddress + " " + parent.address.ward + " " + parent.address.province
+            }
+            const result = await studentApi.create(data)
+            if (result.error) {
+                alert(result.message)
+                return
+            }
+            handleAddStudentIntoDataStudent(result.data)
+
+            console.log("Form submitted:", result)
+
         }
 
     }
@@ -146,8 +167,8 @@ export default function FormAddInfoStudent() {
                 ...prev.parent,
                 address: {
                     ...prev.parent.address,
-                    province: address.Province,  
-                    ward: address.Ward          
+                    province: address.Province,
+                    ward: address.Ward
                 }
             }
         }));
@@ -190,7 +211,7 @@ export default function FormAddInfoStudent() {
                         <DatePicker
                             className="w-60"
                             value={addInfoStudentData.student.birthDay ? new Date(addInfoStudentData.student.birthDay) : undefined}
-                            onChange={(date) => handleChange("student", "birthDay", date ? date.toISOString() : "")}
+                            onChange={(date) => handleChange("student", "birthDay", date ? date.toISOString().split('T')[0] : "")}
                         />
                         {addInfoStudentDataError.student?.birthDay && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.student?.birthDay}</p>}
                     </div>
@@ -202,7 +223,7 @@ export default function FormAddInfoStudent() {
                             values={[{ name: "Nam", value: "Nam" }, { name: "Nữ", value: "Nữ" }]}
                             onChange={(e) => handleChange("student", "gender", e.toString())}
                         />
-                         {addInfoStudentDataError.student?.gender && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.student?.gender}</p>}
+                        {addInfoStudentDataError.student?.gender && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.student?.gender}</p>}
                     </div>
                 </div>
             </div>
@@ -231,7 +252,7 @@ export default function FormAddInfoStudent() {
                         placeholder="Nhập số điện thoại"
                         required
                     />
-                     {addInfoStudentDataError.parent?.phoneNumber && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.parent?.phoneNumber}</p>}
+                    {addInfoStudentDataError.parent?.phoneNumber && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.parent?.phoneNumber}</p>}
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="address">Địa chỉ</Label>
@@ -245,7 +266,7 @@ export default function FormAddInfoStudent() {
                         onChange={e => handleDetailAddressChange(e.target.value)}
                         placeholder="Nhập địa chỉ"
                         required
-                        disabled = {!addInfoStudentData.parent.address.ward}
+                        disabled={!addInfoStudentData.parent.address.ward}
                     />
                     {addInfoStudentDataError.parent?.address?.detailAddress && <p className="px-2 text-sm text-red-500">{addInfoStudentDataError.parent?.address?.detailAddress}</p>}
                 </div>

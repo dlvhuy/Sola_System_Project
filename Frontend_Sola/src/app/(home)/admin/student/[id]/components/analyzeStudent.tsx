@@ -6,13 +6,14 @@ export default function AnalyzeStudent({
     {
         sessions: SessionReview[]
     }) {
+    console.log(sessions)
     return (
         <Card>
             <CardHeader>
                 <CardTitle className="text-lg">Thống kê Tổng quan</CardTitle>
             </CardHeader>
             {
-                sessions.length != 0 ? <CardContent className="space-y-4">
+                sessions.length !== 0 ? <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Tổng số buổi học</span>
                     <span className="font-semibold">{sessions.length}</span>

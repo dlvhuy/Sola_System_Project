@@ -9,8 +9,6 @@ import { isThisMonth } from "date-fns"
 import { lessionReportApi } from "@/lib/api/lession-report.api"
 import { SessionReview } from "@/app/(home)/admin/student/[id]/page"
 
-
-
 type CommentField = {
     Class: number,
     comment: string
@@ -58,7 +56,6 @@ type InfoStudentProgressReportError = {
     theorySkill?: CommentFieldError,
     practiceSkill?: CommentFieldError
 }
-
 
 export default function FormAddStudentProgressReport({
     studentId,
@@ -133,7 +130,9 @@ export default function FormAddStudentProgressReport({
                 alert(result.message)
                 return
             }
-            handleAddSession(result)
+            const dataAddSession = result.data.data
+            dataAddSession.ID = result.data.ID
+            handleAddSession(dataAddSession)
             console.log("Form submitted:", result)
         }
     }

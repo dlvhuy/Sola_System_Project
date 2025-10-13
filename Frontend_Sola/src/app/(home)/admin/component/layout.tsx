@@ -57,7 +57,7 @@ export default function LayoutComponent() {
     }, [searchValue])
 
     const handleAddStudentIntoDataStudent = (value: any) => {
-        setDataStudent((prev) => ({ ...prev, value }));
+        setDataStudent((prev) => [...prev, value]);
     }
 
     const handleChangePagination = (value: number) => {

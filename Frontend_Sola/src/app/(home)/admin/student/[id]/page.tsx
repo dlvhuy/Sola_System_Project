@@ -70,12 +70,11 @@ export default function StudentDetailPage() {
                 console.error("Lỗi khi tải dữ liệu sinh viên:", error);
             }
         };
-
         fetchData();
     }, [studentId,]);
 
     const handleAddSession = (value:SessionReview) =>{
-        setSessions((prev) => ({value,...prev}))
+        setSessions((prev) => [value,...prev])
     }
 
     const handleChangeSelectedSession = (value: SessionReview | null) => {
@@ -123,7 +122,6 @@ export default function StudentDetailPage() {
                     handleSetChartType={handleChangeChartType}
                     chartType={chartType}
                 />
-
                 <AnalyzeStudent
                     sessions={sessions}
                 />

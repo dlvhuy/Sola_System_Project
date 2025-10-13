@@ -16,6 +16,7 @@ import {
     ResponsiveContainer,
 } from "recharts"
 import { SessionReview } from "../page";
+import { useEffect, useState } from "react";
 
 
 export default function ReportChartComponent({
@@ -26,18 +27,36 @@ export default function ReportChartComponent({
         handleSetChartType: (value: "line" | "radar") => void,
         sessions: SessionReview[]
     }) {
-    const lineChartData = sessions.length != 0 ? sessions
-        .slice()
-        .reverse()
-        .map((session) => ({
-            date: new Date(session.date_lession).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" }),
-            "Thái độ": session.class_attitude,
-            "Sôi nổi": session.class_thinking_skill,
-            "Lý thuyết": session.class_theory_skill,
-            "Thực hành": session.class_practice_skill,
-        })) : []
 
-    const radarChartData = [
+    const [lineChartData, setLineChartData] = useState<{
+        date: string;
+        "Th\u00E1i \u0111\u1ED9": number;
+        "S\u00F4i n\u1ED5i": number;
+        "L\u00FD thuy\u1EBFt": number;
+        "Th\u1EF1c h\u00E0nh": number;
+    }[]>([])
+
+    const [radarChartData, setRadarChartData] = useState<{
+        metric: string,
+        value: number,
+        fullMark: number,
+    }[]>()
+
+    useEffect(() => {
+        if (sessions.length == 0)
+            return
+
+        setLineChartData(sessions
+            .slice()
+            .reverse()
+            .map((session) => ({
+                date: new Date(session.date_lession).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" }),
+                "Thái độ": session.class_attitude,
+                "Sôi nổi": session.class_thinking_skill,
+                "Lý thuyết": session.class_theory_skill,
+                "Thực hành": session.class_practice_skill,
+            })))
+        setRadarChartData([
         {
             metric: "Thái độ",
             value: sessions.reduce((sum, s) => sum + s.class_attitude, 0) / sessions.length,
@@ -58,7 +77,12 @@ export default function ReportChartComponent({
             value: sessions.reduce((sum, s) => sum + s.class_practice_skill, 0) / sessions.length,
             fullMark: 5,
         },
-    ]
+    ])
+    }, [sessions])
+
+
+
+    
 
     return (<Card>
         <CardHeader>

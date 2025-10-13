@@ -45,7 +45,6 @@ export default function AddressPicker({ onChange }:
                     name: item.name,
                     value: String(item.code) // hoặc item.codename nếu bạn muốn
                 }));
-                console.log(result);
                 setWards(result || []);
             };
             fetchWards();
@@ -54,12 +53,9 @@ export default function AddressPicker({ onChange }:
 
     useEffect(() => {
         onChange?.(address);
-        console.log(address.Province, address.Ward)
     }, [address]);
 
     const handleChangeProvinces = (value: string) => {
-        console.log("gia tri:", province, value);
-
         setProvince(value);
         setWard("");
 

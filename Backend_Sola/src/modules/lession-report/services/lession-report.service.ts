@@ -12,7 +12,6 @@ export class LessionReportsService {
 
     async create(data: LessionReport): Promise<ResponseHelper> {
         try {
-
             const newLesionReport = await this.lessionReportModel.create(data);
             const data1 = {
                 ID: newLesionReport.ID,

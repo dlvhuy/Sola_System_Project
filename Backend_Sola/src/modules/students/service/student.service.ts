@@ -73,10 +73,10 @@ export class StudentsService {
                 include: [
                     {
                         model: LessionReport,
-                        separate: true, // tránh conflict SQL subquery
+                        separate: true, 
                         limit: reportLimit,
                         order: [['createdAt', 'DESC']],
-                        attributes: ['ID', 'name_lession', 'date_lession'],
+
                     },
                 ],
             });

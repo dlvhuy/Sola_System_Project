@@ -6,12 +6,16 @@ import { Input } from "@/components/ui/input";
 import { dataTeacher, Teacher } from "@/lib/dataTeacher";
 import { createColumnHelper } from "@tanstack/react-table";
 import { MoreVertical } from "lucide-react";
-import { Student } from "../student/[id]/page";
+import { Pagination, Student } from "../student/[id]/page";
 import Link from "next/link";
+import { DynamicPagination } from "@/components/pagination";
+import { useEffect } from "react";
 
 type StudnentComponentProps = {
     openModalStudentInfo: (value: boolean) => void,
-    dataStudents:Student[]
+    dataSeachStudent:string,
+    handleChangeDataStudent:(value:string) => void
+    dataStudents: Student[],
 }
 
 const collumnHelper = createColumnHelper<Student>()
@@ -70,14 +74,14 @@ const collumn = [
     }),
 
     collumnHelper.display({
-        id:"more",
-        cell: ({row}) => {
+        id: "more",
+        cell: ({ row }) => {
             const studentId = row.original.ID
-            return(
+            return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant={"ghost"} className="cursor-pointer">
-                            <MoreVertical/>
+                            <MoreVertical />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-white text-black shadow-lg " onCloseAutoFocus={(e) => e.preventDefault()}>
@@ -95,36 +99,36 @@ const collumn = [
 ]
 
 export default function StudentComponent({
-     openModalStudentInfo,
-     dataStudents 
-    }: StudnentComponentProps) {
-
-    console.log("heloo: ",dataStudents)
+    openModalStudentInfo,
+    dataStudents,
+    dataSeachStudent,
+    handleChangeDataStudent
+}: StudnentComponentProps) {
 
     return (
-    <div className="grid lg:grid-cols-4 gap-4  md:*:grid-cols-1 sm:grid-cols-1">
-        <div className=" grid lg:col-span-4 p-4 rounded-lg ">
-            <div className="flex justify-between mb-3">
-                <div className="max-w-[80%]" >
-                    <h1 className="text-2xl font-bold mb-4">Danh sách học viên</h1>
-                    <div className="w-[250px]">
-                        <Input
-                            placeholder="Tìm kiêm học sinh"
-                        />
+        <div className="grid lg:grid-cols-4 gap-4  md:*:grid-cols-1 sm:grid-cols-1">
+            <div className=" grid lg:col-span-4 p-4 rounded-lg ">
+                <div className="flex justify-between mb-3">
+                    <div className="max-w-[80%]" >
+                        <h1 className="text-2xl font-bold mb-4">Danh sách học viên</h1>
+                        <div className="w-[250px]">
+                            <Input
+                                value={dataSeachStudent}
+                                placeholder="Tìm kiêm học sinh"
+                                onChange={(e) => handleChangeDataStudent(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <Button className="cursor-pointer" onClick={() => openModalStudentInfo(true)}>
+                            Thêm thông tin học sinh
+                        </Button>
+
                     </div>
                 </div>
-
                 <div>
-                    <Button className="cursor-pointer" onClick={() => openModalStudentInfo(true)}>
-                        Thêm thông tin học sinh
-                    </Button>
-
+                    <DataTable<Student, any> columns={collumn} data={dataStudents}></DataTable>
                 </div>
             </div>
-            <div>
-                <DataTable<Student, any> columns={collumn} data={dataStudents}></DataTable>
-            </div>
-        </div>
-
-    </div>)
+        </div>)
 }

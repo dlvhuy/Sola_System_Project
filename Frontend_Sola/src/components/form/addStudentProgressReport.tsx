@@ -7,6 +7,7 @@ import { Button } from "../ui/button"
 import { useState } from "react"
 import { isThisMonth } from "date-fns"
 import { lessionReportApi } from "@/lib/api/lession-report.api"
+import { SessionReview } from "@/app/(home)/admin/student/[id]/page"
 
 
 
@@ -59,7 +60,13 @@ type InfoStudentProgressReportError = {
 }
 
 
-export default function FormAddStudentProgressReport({studentId}:{studentId:string}) {
+export default function FormAddStudentProgressReport({
+    studentId,
+    handleAddSession
+}: {
+    handleAddSession: (value: SessionReview) => void
+    studentId: string
+}) {
     const [addInfoStudentProgressReportData, setAddInfoStudentProgressReportData] = useState<InfoStudentProgressReport>(initialFormData)
     const [addInfoStudentProgressReportDataError, setAddInfoStudentProgressReportDataError] = useState<InfoStudentProgressReportError>({})
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -109,7 +116,7 @@ export default function FormAddStudentProgressReport({studentId}:{studentId:stri
 
         if (Object.keys(addInfoStudentProgressReportDataError).length === 0) {
             const data = {
-                studentID: studentId,
+                studentId: studentId,
                 name_lession: lesson,
                 date_lession: lessonDate,
                 class_thinking_skill: thinkingSkill.Class,
@@ -126,13 +133,9 @@ export default function FormAddStudentProgressReport({studentId}:{studentId:stri
                 alert(result.message)
                 return
             }
-
+            handleAddSession(result)
             console.log("Form submitted:", result)
-
         }
-        console.log("Form submitted:", { addInfoStudentProgressReportData })
-
-
     }
 
     const updateNestedField = (
@@ -171,7 +174,7 @@ export default function FormAddStudentProgressReport({studentId}:{studentId:stri
                         <DatePicker
                             className="w-40"
                             value={addInfoStudentProgressReportData.lessonDate ? new Date(addInfoStudentProgressReportData.lessonDate) : undefined}
-                            onChange={(date) => setAddInfoStudentProgressReportData({ ...addInfoStudentProgressReportData, lessonDate: date ? date.toISOString() : "" })}
+                            onChange={(date) => setAddInfoStudentProgressReportData({ ...addInfoStudentProgressReportData, lessonDate: date ? date.toISOString().split('T')[0] : "" })}
                         />
                         {addInfoStudentProgressReportDataError.lessonDate && <p className="px-2 text-sm text-red-500">{addInfoStudentProgressReportDataError.lessonDate}</p>}
                     </div>
@@ -286,7 +289,7 @@ export default function FormAddStudentProgressReport({studentId}:{studentId:stri
                                     max={5}
                                     step={1}
                                     value={[addInfoStudentProgressReportData.practiceSkill.Class]}
-                                    onValueChange={(value) => updateNestedField("theorySkill", "Class", value[0])}
+                                    onValueChange={(value) => updateNestedField("practiceSkill", "Class", value[0])}
                                     className="w-full my-2"
                                 />
                                 <div className="flex mt-2 justify-between text-xs text-gray-500">

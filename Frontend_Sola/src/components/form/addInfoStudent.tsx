@@ -135,7 +135,7 @@ export default function FormAddInfoStudent({
                 birthday: student.birthDay,
                 nameParent: parent.nameParent,
                 phoneNumber: parent.phoneNumber,
-                address: parent.address.detailAddress + " " + parent.address.ward + " " + parent.address.province
+                address: parent.address.detailAddress + ", " + parent.address.ward + ", " + parent.address.province
             }
             const result = await studentApi.create(data)
             if (result.error) {
@@ -143,7 +143,6 @@ export default function FormAddInfoStudent({
                 return
             }
             handleAddStudentIntoDataStudent(result.data)
-
             console.log("Form submitted:", result)
 
         }

@@ -2,7 +2,7 @@ import { plainToInstance } from "class-transformer";
 import { LessionReport } from "../entity/lession-report.entity";
 
 export class CreateLessionReportDto {
-    studentID: number;
+    StudentID: number;
     name_lession: string;
     date_lession: string;
     class_thinking_skill: number;

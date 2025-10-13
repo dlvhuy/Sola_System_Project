@@ -26,35 +26,36 @@ export default function ReportChartComponent({
         handleSetChartType: (value: "line" | "radar") => void,
         sessions: SessionReview[]
     }) {
-    const lineChartData = sessions
+    const lineChartData = sessions.length != 0 ? sessions
         .slice()
         .reverse()
         .map((session) => ({
-            date: new Date(session.session_date).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" }),
-            "Thái độ": session.attitude_rating,
-            "Sôi nổi": session.enthusiasm_rating,
-            "Lý thuyết": session.theory_rating,
-            "Thực hành": session.practice_rating,
-        }))
+            date: new Date(session.date_lession).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" }),
+            "Thái độ": session.class_attitude,
+            "Sôi nổi": session.class_thinking_skill,
+            "Lý thuyết": session.class_theory_skill,
+            "Thực hành": session.class_practice_skill,
+        })) : []
+
     const radarChartData = [
         {
             metric: "Thái độ",
-            value: sessions.reduce((sum, s) => sum + s.attitude_rating, 0) / sessions.length,
+            value: sessions.reduce((sum, s) => sum + s.class_attitude, 0) / sessions.length,
             fullMark: 5,
         },
         {
             metric: "Sôi nổi",
-            value: sessions.reduce((sum, s) => sum + s.enthusiasm_rating, 0) / sessions.length,
+            value: sessions.reduce((sum, s) => sum + s.class_thinking_skill, 0) / sessions.length,
             fullMark: 5,
         },
         {
             metric: "Lý thuyết",
-            value: sessions.reduce((sum, s) => sum + s.theory_rating, 0) / sessions.length,
+            value: sessions.reduce((sum, s) => sum + s.class_theory_skill, 0) / sessions.length,
             fullMark: 5,
         },
         {
             metric: "Thực hành",
-            value: sessions.reduce((sum, s) => sum + s.practice_rating, 0) / sessions.length,
+            value: sessions.reduce((sum, s) => sum + s.class_practice_skill, 0) / sessions.length,
             fullMark: 5,
         },
     ]
@@ -65,6 +66,7 @@ export default function ReportChartComponent({
                 <CardTitle>Biểu đồ Tiến trình Học tập</CardTitle>
                 <div className="flex space-x-2">
                     <Button
+                        className="cursor-pointer"
                         variant={chartType === "line" ? "default" : "outline"}
                         size="sm"
                         onClick={() => handleSetChartType("line")}
@@ -72,6 +74,7 @@ export default function ReportChartComponent({
                         Đường
                     </Button>
                     <Button
+                        className="cursor-pointer"
                         variant={chartType === "radar" ? "default" : "outline"}
                         size="sm"
                         onClick={() => handleSetChartType("radar")}
@@ -81,7 +84,7 @@ export default function ReportChartComponent({
                 </div>
             </div>
         </CardHeader>
-        <CardContent>
+        {sessions.length != 0 ? <CardContent>
             {chartType === "line" ? (
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={lineChartData}>
@@ -102,11 +105,16 @@ export default function ReportChartComponent({
                         <PolarGrid />
                         <PolarAngleAxis dataKey="metric" style={{ fontSize: "12px" }} />
                         <PolarRadiusAxis domain={[0, 5]} />
-                        <Radar name="Điểm trung bình" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
+                        <Radar name="Điểm trung bình" dataKey="value" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
                         <Tooltip />
                     </RadarChart>
                 </ResponsiveContainer>
             )}
-        </CardContent>
+        </CardContent> :
+            <div className="flex justify-center">
+                <p>Chưa có buổi học nào</p>
+            </div>
+        }
+
     </Card>)
 }

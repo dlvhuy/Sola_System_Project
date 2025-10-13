@@ -19,7 +19,6 @@ export class StudentsController {
         @Query('limit') limit?: number) {
         return this.studentsService.getStudentWithReports(id,limit);
     }
-
     @Get()
     async GetAll (
         @Query('search') search?: string,

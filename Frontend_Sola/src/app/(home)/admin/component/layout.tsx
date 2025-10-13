@@ -6,17 +6,69 @@ import { useEffect, useState } from "react";
 import StudentComponent from "./studentComponent";
 import TeacherComponent from "./teacherComponent";
 import FormAddInfoTeacher from "@/components/form/addInfoTeacher";
-import FormAddStudentProgressReport from "@/components/form/addStudentProgressReport";
-import { Student } from "../student/[id]/page";
+import { Filter, Pagination, Student } from "../student/[id]/page";
 import { Teacher } from "@/lib/dataStudent";
 import { studentApi } from "@/lib/api/student.api";
+import { DynamicPagination } from "@/components/pagination";
+
+
+
 
 export default function LayoutComponent() {
     const [active, setActive] = useState<"student" | "teacher">("student")
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
     const [dataStudent, setDataStudent] = useState<Student[]>([])
+    const [searchValue, setSearchValue] = useState("")
     const [dataTeacher, setDataTeacher] = useState<Teacher[]>([])
+    const [filter, setFilter] = useState<Filter>({ search: "", pagination: { currentPage: 1, totalPage: 0 } })
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await studentApi.getAll(filter.search, filter.pagination.currentPage);
+                setDataStudent(data.data.data);
+                setFilter({
+                    ...filter,
+                    pagination: {
+                        currentPage: data.data.currentPage,
+                        totalPage: data.data.totalPages
+                    }
+                })
+
+                console.log(data)
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu sinh viên:", error);
+            }
+        };
+
+        fetchData();
+    }, [filter.pagination.currentPage,filter.search]);
+
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setFilter(prev => ({
+                ...prev,
+                search: searchValue,
+            }))
+        }, 500)
+
+        return () => clearTimeout(delay)
+    }, [searchValue])
+
+    const handleAddStudentIntoDataStudent = (value: any) => {
+        setDataStudent((prev) => ({ ...prev, value }));
+    }
+
+    const handleChangePagination = (value: number) => {
+        setFilter({
+            ...filter,
+            pagination: {
+                ...filter.pagination,
+                currentPage: value,
+            },
+        })
+    }
     const handleSetOpenModal = (data: boolean) => {
         setIsOpenModal(data);
     };
@@ -26,22 +78,14 @@ export default function LayoutComponent() {
         setIsOpenModal(false)
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await studentApi.getAll();
-                setDataStudent(data.data.data);
-            } catch (error) {
-                console.error("Lỗi khi tải dữ liệu sinh viên:", error);
-            }
-        };
-
-        fetchData(); 
-    }, []); 
-
-    const handleAddStudentIntoDataStudent = (value:any) =>{
-
-        setDataStudent((prev) => ({...prev,value}));
+    const handleOnChangeSearch = (value: string) => {
+        setFilter({
+            ...filter,
+            search: value
+        })
+    }
+    const handleOnChangeSearchData = (value:string) =>{
+        setSearchValue(value)
     }
 
     return (
@@ -65,12 +109,22 @@ export default function LayoutComponent() {
             {
                 active === "student" ?
                     <div>
-                        <StudentComponent dataStudents={dataStudent} openModalStudentInfo={handleSetOpenModal}></StudentComponent>
+                        <StudentComponent
+                            dataSeachStudent={searchValue}
+                            handleChangeDataStudent={handleOnChangeSearchData}
+                            dataStudents={dataStudent}
+                            openModalStudentInfo={handleSetOpenModal}>
+                        </StudentComponent>
+                        <DynamicPagination
+                            currentPage={filter.pagination.currentPage}
+                            totalPages={filter.pagination.totalPage}
+                            handleChangePage={handleChangePagination}
+                        ></DynamicPagination>
                         {
                             isOpenModal &&
                             <Modal sendOpenModal={handleSetOpenModal} title="Thêm thông tin học sinh">
-                                <FormAddInfoStudent 
-                                    handleAddStudentIntoDataStudent={handleAddStudentIntoDataStudent} 
+                                <FormAddInfoStudent
+                                    handleAddStudentIntoDataStudent={handleAddStudentIntoDataStudent}
                                 />
                             </Modal>
                         }

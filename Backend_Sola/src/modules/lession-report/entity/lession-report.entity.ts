@@ -19,9 +19,8 @@ export class LessionReport extends Model<LessionReport> {
         type: DataType.INTEGER,
         allowNull: false,
     })
-    StudentId: number;
+    studentId: number;
 
-    // Mỗi LessionReport thuộc về 1 Class
     @BelongsTo(() => Student)
     student: Student;
 

@@ -5,10 +5,10 @@ import { studentApi } from "@/lib/api/student.api";
 import { Badge } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import InfoStudentComponent from "../../admin/student/[id]/components/infoStudentComponent";
-import ListStudentProgressComponent from "../../admin/student/[id]/components/listStudentProgressReportComponent";
-import ReportChartComponent from "../../admin/student/[id]/components/reportChartComponent";
-import AnalyzeStudent from "../../admin/student/[id]/components/analyzeStudent";
+import InfoStudentComponent from "../../../../components/studentComponents/infoStudentComponent";
+import ListStudentProgressComponent from "../../../../components/studentComponents/listStudentProgressReportComponent";
+import ReportChartComponent from "../../../../components/studentComponents/reportChartComponent";
+import AnalyzeStudent from "../../../../components/studentComponents/analyzeStudent";
 import Modal from "@/components/modal";
 import FormAddStudentProgressReport from "@/components/form/addStudentProgressReport";
 

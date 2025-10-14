@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Student } from "../page";
+import { Student } from "../../app/(home)/admin/student/[id]/page";
 
 export default function InfoStudentComponent({student}:{student:Student | null}) {
 

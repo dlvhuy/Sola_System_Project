@@ -61,13 +61,13 @@ export default function LayoutComponent() {
     }
 
     const handleChangePagination = (value: number) => {
-        setFilter({
-            ...filter,
+        setFilter(prev => ({
+            ...prev,
             pagination: {
-                ...filter.pagination,
+                ...prev.pagination,
                 currentPage: value,
             },
-        })
+        }))
     }
     const handleSetOpenModal = (data: boolean) => {
         setIsOpenModal(data);

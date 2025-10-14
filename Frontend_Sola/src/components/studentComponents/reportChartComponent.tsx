@@ -15,7 +15,7 @@ import {
     Legend,
     ResponsiveContainer,
 } from "recharts"
-import { SessionReview } from "../page";
+import { SessionReview } from "../../app/(home)/admin/student/[id]/page";
 import { useEffect, useState } from "react";
 
 
@@ -80,13 +80,9 @@ export default function ReportChartComponent({
     ])
     }, [sessions])
 
-
-
-    
-
     return (<Card>
         <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col justify-between gap-2">
                 <CardTitle>Biểu đồ Tiến trình Học tập</CardTitle>
                 <div className="flex space-x-2">
                     <Button

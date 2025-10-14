@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SessionReview } from "../page";
+import { SessionReview } from "../../app/(home)/admin/student/[id]/page";
 
 export default function AnalyzeStudent({
     sessions }:

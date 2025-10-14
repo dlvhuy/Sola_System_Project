@@ -11,12 +11,24 @@ export function DynamicPagination(
             handleChangePage: (value: number) => void
         }) {
 
+    const handlePrev = () => {
+        if (currentPage > 1) handleChangePage(currentPage - 1);
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) handleChangePage(Number(currentPage) + 1);
+    };
+
     return (
         <Pagination>
             <PaginationContent>
                 <PaginationItem>
                     <PaginationPrevious
                         href="#"
+                        onClick={(e) =>{
+                            e.preventDefault()
+                            handlePrev()
+                        }}
                     />
                 </PaginationItem>
 
@@ -34,6 +46,10 @@ export function DynamicPagination(
                 <PaginationItem>
                     <PaginationNext
                         href="#"
+                        onClick={(e) =>{
+                            e.preventDefault()
+                            handleNext()
+                        }}
                     />
                 </PaginationItem>
             </PaginationContent>

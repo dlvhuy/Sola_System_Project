@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Edit, Link } from "lucide-react";
-import { SessionReview } from "../page";
+import { SessionReview } from "../../app/(home)/admin/student/[id]/page";
 import { useEffect } from "react";
 
 export default function ListStudentProgressComponent({

@@ -6,10 +6,10 @@ import { Badge, Edit, Link } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import InfoStudentComponent from "./components/infoStudentComponent";
-import ListStudentProgressComponent from "./components/listStudentProgressReportComponent";
-import ReportChartComponent from "./components/reportChartComponent";
-import AnalyzeStudent from "./components/analyzeStudent";
+import InfoStudentComponent from "../../../../../components/studentComponents/infoStudentComponent";
+import ListStudentProgressComponent from "../../../../../components/studentComponents/listStudentProgressReportComponent";
+import ReportChartComponent from "../../../../../components/studentComponents/reportChartComponent";
+import AnalyzeStudent from "../../../../../components/studentComponents/analyzeStudent";
 import { studentApi } from "@/lib/api/student.api";
 import { lessionReportApi } from "@/lib/api/lession-report.api";
 import { Pagination } from "@/components/ui/pagination";
